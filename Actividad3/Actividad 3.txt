@@ -89,6 +89,10 @@ eoxuyam@GDT-SIS-3DYVH:/home$ ls -l
 	drwxr-x--- 2 user2   user2   4096 Aug  2 07:57 user2
 	drwxr-x--- 2    1004    1004 4096 Aug  2 07:58 user3
 
+
+
+
+
 ###################################### GESTION DE GRUPOS
 
 # CREACION DE GRUPOS
@@ -103,4 +107,126 @@ eoxuyam@GDT-SIS-3DYVH:~$ cat /etc/passwd
 	user1:x:1002:1002:User1,,,,Es el usuario 1:/home/user1:/bin/bash
 	user2:x:1003:1003:User2,,,,Es el usuario 2:/home/user2:/bin/bash
 	
+eddie@Dell_Inspiron_Gaming_15:~$ sudo usermod -g grupo1 user1
+eddie@Dell_Inspiron_Gaming_15:~$ sudo usermod -g grupo2 user2
+
+eddie@Dell_Inspiron_Gaming_15:~$ id user1
+	uid=1001(user1) gid=1004(grupo1) groups=1004(grupo1)
+eddie@Dell_Inspiron_Gaming_15:~$ id user2
+	uid=1002(user2) gid=1005(grupo2) groups=1005(grupo2)
+	
+eddie@Dell_Inspiron_Gaming_15:~$ cat /etc/passwd
+	user1:x:1001:1004:User1,,,:/home/user1:/bin/bash
+	user2:x:1002:1005:User2,,,:/home/user2:/bin/bash
+
+# VALIDANDO LA MEMBRESIA
+
+eddie@Dell_Inspiron_Gaming_15:~$ groups user1
+	user1 : grupo1
+eddie@Dell_Inspiron_Gaming_15:~$ groups user2
+	user2 : grupo2
+
+# ELIMINANDO EL GRUPO 2
+
+eddie@Dell_Inspiron_Gaming_15:~$ sudo usermod -g user2 user2
+eddie@Dell_Inspiron_Gaming_15:~$ sudo groupdel grupo2
+
+
+
+
+
+
+###################################### GESTION DE PERMISOS
+
+# 1 - CREACION DE ARCHIVOS Y DIRECTORIOS
+
+eddie@Dell_Inspiron_Gaming_15:~$ su user1
+user1@Dell_Inspiron_Gaming_15:/home/eddie$ cd /home/user1
+user1@Dell_Inspiron_Gaming_15:~$ echo "Mi archivo1"> archivo1.txt
+user1@Dell_Inspiron_Gaming_15:~$ mkdir directorio1
+user1@Dell_Inspiron_Gaming_15:~$ echo "Mi archivo 2" > directorio1/archivo2.txt
+
+
+# 2 - VERIFICAR ARCHIVOS
+
+user1@Dell_Inspiron_Gaming_15:~$ ls -l
+	total 0
+	-rw-r--r-- 1 user1 grupo1  12 Aug  4 18:12 archivo1.txt
+	drwxr-xr-x 1 user1 grupo1 512 Aug  4 18:15 directorio1
+user1@Dell_Inspiron_Gaming_15:~$ ls -ld
+	drwxr-xr-x 1 user1 grupo1 512 Aug  4 18:15 .
+
+
+# 3- MODIFICACION DE PERMISOS 
+
+user1@Dell_Inspiron_Gaming_15:~$ chmod 640 archivo1.txt
+user1@Dell_Inspiron_Gaming_15:~$ ls -l
+	total 0
+	-rw-r----- 1 user1 grupo1  12 Aug  4 18:12 archivo1.txt
+	drwxr-xr-x 1 user1 grupo1 512 Aug  4 18:15 directorio1
+
+
+# 4 - MODIFICAR PERMISOS CON EL MODO SIMBOLICO
+
+
+user1@Dell_Inspiron_Gaming_15:~$ cd directorio1
+user1@Dell_Inspiron_Gaming_15:~/directorio1$ ls -l
+	total 0
+	-rwxr--r-- 1 user1 grupo1 13 Aug  4 18:36 archivo2.txt
+user1@Dell_Inspiron_Gaming_15:~/directorio1$ chmod u+x archivo2.txt
+user1@Dell_Inspiron_Gaming_15:~/directorio1$ ls -l
+	total 0
+	-rwxr--r-- 1 user1 grupo1 13 Aug  4 18:36 archivo2.txt
+
+
+# 5 - CAMBIANDO EL GRUPO
+
+user1@Dell_Inspiron_Gaming_15:~/directorio1$ chown user1:grupo1 archivo2.txt
+
+
+
+# 6 - CAMBIAR LOS PERMISOS DEL DIRECTORIO
+
+
+user1@Dell_Inspiron_Gaming_15:~/directorio1$ cd ..
+user1@Dell_Inspiron_Gaming_15:~$ chmod 640 directorio1
+user1@Dell_Inspiron_Gaming_15:~$ ls -l
+	total 0
+	-rw-r----- 1 user1 grupo1  12 Aug  4 18:12 archivo1.txt
+	drw-r----- 1 user1 grupo1 512 Aug  4 18:36 directorio1
+
+
+# 7 - COMPROBACION DE ACCESSO
+
+user1@Dell_Inspiron_Gaming_15:~$ su user2
+	Password:
+user2@Dell_Inspiron_Gaming_15:/home/user1$
+user2@Dell_Inspiron_Gaming_15:/home/user1$ cd directorio1
+bash: cd: directorio1: Permission denied
+
+
+# 8 - VERIFICACION FINAL
+
+
+user2@Dell_Inspiron_Gaming_15:/home/user1$ ls -l
+	total 0
+	-rw-r----- 1 user1 grupo1  12 Aug  4 18:12 archivo1.txt
+	drw-r----- 1 user1 grupo1 512 Aug  4 18:36 directorio1
+
+
+
+
+
+
+###################################### REFLEXION FINAL
+
+ ¿Por qué es importante gestionar correctamente los usuarios y permisos en un sistema operativo?
+
+Para mantener la privacidad de la información y evitar que un usuario pueda eliminar informacion delicada
+
+
+ ¿Qué otros comandos o técnicas conocen para gestionar permisos en Linux?
+
+La unica tecnica es del manejo centralizado por medio de LDAP para la gestion de usuarios y permisos. 
+
 
