@@ -1,0 +1,12 @@
+[Unit]
+Description=Servicio que imprime un saludo y la fecha actual del
+sistema
+After=network.target
+
+[Service]
+ExecStart=/home/eddie/mi_saludo.sh
+Restart=always
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
